@@ -11,19 +11,33 @@
   <script src="https://unpkg.com/supersimpledev/babel.js"></script>
 
   <script type="text/babel">
-
-    const div = (
-      <div>
-        <p>cotton socks</p>
-        <p>Price : $10</p>
-        <button style={{ color: 'black', backgroundColor: 'aqua' }}>
-          Add To Cart
-        </button>
-      </div>
-    );
-
+function Counter(props) {
+  
+  function Clicked(){
+    console.log("clicked");
+    props.setCount(props.count+1);
+    }
+     let text = "Times"
+    if(props.count==1){
+      text = "Time"
+  }
+return (<button onClick = {Clicked}>Clicked {props.count} {text}</button>)
+}
+function App(){
+const[count,setCount]= React.useState(0)
+  return(
+    <>
+    <Counter 
+    count ={count}
+    setCount={setCount} />
+     <Counter 
+    count ={count}
+    setCount={setCount} />
+    </>
+  )
+}
     const container = document.querySelector('.js-container');
-    ReactDOM.createRoot(container).render(div);
+    ReactDOM.createRoot(container).render(<App />);
 
   </script>
 </body>
