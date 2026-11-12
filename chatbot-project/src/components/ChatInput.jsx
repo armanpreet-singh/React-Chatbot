@@ -1,52 +1,58 @@
 import { useState } from 'react'
-import { Chatbot} from 'supersimpledev'
+import { Chatbot } from 'supersimpledev'
 import './ChatInput.css'
 
-export function ChatInput({ chatMessages, setChatMessages }) {
-        const [inputText, setInputText] = useState('');
+export function ChatInput({ setChatMessages }) {
+  const [inputText, setInputText] = useState('')
 
-        function saveInputText(event) {
-          setInputText(event.target.value);
-        }
+  function saveInputText(event) {
+    setInputText(event.target.value)
+  }
 
-        function sendMessage() {
-          const newChatMessages = [
-            ...chatMessages,
-            {
-              message: inputText,
-              sender: 'user',
-              id: crypto.randomUUID()
-            }
-          ];
+  function sendMessage(event) {
+    event.preventDefault()
 
-          setChatMessages(newChatMessages);
+    const message = inputText.trim()
+    if (!message) return
 
-          const response = Chatbot.getResponse(inputText);
-          setChatMessages([
-            ...newChatMessages,
-            {
-              message: response,
-              sender: 'robot',
-              id: crypto.randomUUID()
-            }
-          ]);
+    const userMessage = {
+      message,
+      sender: 'user',
+      id: crypto.randomUUID(),
+    }
 
-          setInputText('');
-        }
+    const botMessage = {
+      message: Chatbot.getResponse(message),
+      sender: 'robot',
+      id: crypto.randomUUID(),
+    }
 
-        return (
-          <div className="chat-input-container">
-            <input
-              placeholder="Send a message to Chatbot"
-              size="30"
-              onChange={saveInputText}
-              value={inputText}
-              className="chat-input"
-            />
-            <button
-              onClick={sendMessage}
-              className="send-button"
-            >Send</button>
-          </div>
-        );
-      }
+    setChatMessages((currentMessages) => [
+      ...currentMessages,
+      userMessage,
+      botMessage,
+    ])
+    setInputText('')
+  }
+
+  return (
+    <form className="chat-input-container" onSubmit={sendMessage}>
+      <input
+        type="text"
+        placeholder="Send a message to Chatbot"
+        aria-label="Message to Chatbot"
+        autoComplete="off"
+        value={inputText}
+        onChange={saveInputText}
+        className="chat-input"
+      />
+      <button
+        type="submit"
+        className="send-button"
+        disabled={!inputText.trim()}
+      >
+        Send
+      </button>
+    </form>
+  )
+}
