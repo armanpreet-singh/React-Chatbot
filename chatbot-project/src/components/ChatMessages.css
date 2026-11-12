@@ -5,3 +5,8 @@
         scrollbar-width: none;
 
       }
+.chat-empty-state {
+  color: #666;
+  text-align: center;
+  padding: 24px 16px;
+}
