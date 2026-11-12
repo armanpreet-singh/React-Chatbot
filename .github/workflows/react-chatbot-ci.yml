@@ -1,0 +1,33 @@
+name: React Chatbot CI
+
+on:
+  pull_request:
+    paths:
+      - "chatbot-project/**"
+      - ".github/workflows/**"
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: chatbot-project/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --prefix chatbot-project
+
+      - name: Run ESLint
+        run: npm run lint --prefix chatbot-project
+
+      - name: Build production bundle
+        run: npm run build --prefix chatbot-project
